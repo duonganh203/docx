@@ -2,64 +2,35 @@ import fs from "fs";
 import path from "path";
 import JSZip from "jszip";
 
-const LOREM_WORDS = [
-    "Lorem",
-    "ipsum",
-    "dolor",
-    "sit",
-    "amet",
-    "consectetur",
-    "adipiscing",
-    "elit",
-    "sed",
-    "do",
-    "eiusmod",
-    "tempor",
-    "incididunt",
-    "ut",
-    "labore",
-    "et",
-    "dolore",
-    "magna",
-    "aliqua",
-    "Ut",
-    "enim",
-    "ad",
-    "minim",
-    "veniam",
-    "quis",
-    "nostrud",
-    "exercitation",
-    "ullamco",
-    "laboris",
-    "nisi",
-    "aliquip",
-    "ex",
-    "ea",
-    "commodo",
-    "consequat",
-    "Duis",
-    "aute",
-    "irure",
-    "in",
-    "reprehenderit",
-    "voluptate",
-    "velit",
-    "esse",
-    "cillum",
-    "fugiat",
-    "nulla",
-    "pariatur",
-    "Excepteur",
-    "sint",
-];
+// Load translation mapping from JSON file
+const loadTranslationMapping = () => {
+    try {
+        const jsonPath = path.resolve("example_texts_complex.json");
+        const jsonData = fs.readFileSync(jsonPath, "utf8");
+        const translations = JSON.parse(jsonData);
 
-const updateXmlTextNodes = (xml, transform) =>
-    xml.replace(
+        // Create mapping from original text to translated text
+        const mapping = new Map();
+        Object.values(translations).forEach(
+            ({ originalText, translatedText }) => {
+                mapping.set(originalText.trim(), translatedText);
+            }
+        );
+
+        return mapping;
+    } catch (error) {
+        console.error("Error loading translation file:", error.message);
+        process.exit(1);
+    }
+};
+
+const updateXmlTextNodes = (xml, transform) => {
+    return xml.replace(
         /<w:t(\s[^>]*)?>([\s\S]*?)<\/w:t>/g,
         (_, attrs, inner) =>
             `<w:t${attrs || ""}>${transform(inner || "")}</w:t>`
     );
+};
 
 const processDocx = async (inputPath, outputPath, transform) => {
     const buf = fs.readFileSync(inputPath);
@@ -94,33 +65,29 @@ const processDocx = async (inputPath, outputPath, transform) => {
     fs.writeFileSync(outputPath, out);
 };
 
-const transform = (text) => {
+const createTransform = (translationMapping) => (text) => {
     if (!text?.trim()) return text;
 
-    const wordCount = Math.max(1, text.trim().split(/\s+/).length);
-    return Array.from(
-        { length: wordCount },
-        (_, i) => LOREM_WORDS[i % LOREM_WORDS.length]
-    ).join(" ");
+    const trimmedText = text.trim();
+
+    // Check for exact match first
+    if (translationMapping.has(trimmedText)) {
+        return translationMapping.get(trimmedText);
+    }
+
+    // Check for partial matches (case insensitive)
+    for (const [original, translated] of translationMapping.entries()) {
+        if (trimmedText.toLowerCase().includes(original.toLowerCase())) {
+            return translated;
+        }
+    }
+
+    return text;
 };
 
 const main = async () => {
-    const [, , inArg, outArg] = process.argv;
-
-    if (!inArg) {
-        console.error(
-            "Usage: node update-docx-standalone.js <input.docx> [output.docx]"
-        );
-        process.exit(1);
-    }
-
-    const inputPath = path.resolve(inArg);
-    const outputPath = outArg
-        ? path.resolve(outArg)
-        : path.join(
-              path.dirname(inputPath),
-              path.basename(inputPath, path.extname(inputPath)) + ".vi.docx"
-          );
+    const inputPath = path.resolve("input.docx");
+    const outputPath = path.resolve("output.docx");
 
     if (!fs.existsSync(inputPath)) {
         console.error(`Error: Input file does not exist: ${inputPath}`);
@@ -128,15 +95,17 @@ const main = async () => {
     }
 
     try {
+        const translationMapping = loadTranslationMapping();
+        const transform = createTransform(translationMapping);
+
         await processDocx(inputPath, outputPath, transform);
-        console.log(`✅ Successfully processed: ${outputPath}`);
     } catch (error) {
-        console.error(`❌ Error: ${error.message}`);
+        console.error(`Error: ${error.message}`);
         process.exit(1);
     }
 };
 
 main().catch((err) => {
-    console.error(`❌ Unexpected error: ${err.message}`);
+    console.error(`Unexpected error: ${err.message}`);
     process.exit(1);
 });
