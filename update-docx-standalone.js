@@ -1,8 +1,8 @@
 import fs from "fs";
 import JSZip from "jszip";
 
-// 1. Load translations from JSON file
-function loadTranslations() {
+// Load translations from JSON file
+const loadTranslations = () => {
     const jsonContent = fs.readFileSync("example_texts_complex.json", "utf8");
     const data = JSON.parse(jsonContent);
 
@@ -16,10 +16,10 @@ function loadTranslations() {
     });
 
     return translationMap;
-}
+};
 
-// 2. Find and replace text in XML
-function replaceTextInXml(xmlContent, translateFunction) {
+// Find and replace text in XML
+const replaceTextInXml = (xmlContent, translateFunction) => {
     // Find all <w:t>...</w:t> tags and replace content inside
     return xmlContent.replace(
         /<w:t(\s[^>]*)?>([\s\S]*?)<\/w:t>/g,
@@ -28,10 +28,10 @@ function replaceTextInXml(xmlContent, translateFunction) {
             return `<w:t${attributes || ""}>${translatedText}</w:t>`;
         }
     );
-}
+};
 
-// 3. Translate a text segment
-function translateText(text, translationMap) {
+// Translate a text segment
+const translateText = (text, translationMap) => {
     // If text is empty, return original
     if (!text || !text.trim()) {
         return text;
@@ -53,10 +53,10 @@ function translateText(text, translationMap) {
 
     // No translation found, return original text
     return text;
-}
+};
 
-// 4. Process DOCX file
-async function translateDocxFile(inputFile, outputFile, translationMap) {
+// Process DOCX file
+const translateDocxFile = async (inputFile, outputFile, translationMap) => {
     // Read DOCX file as ZIP
     const fileBuffer = fs.readFileSync(inputFile);
     const zip = await new JSZip().loadAsync(fileBuffer);
@@ -105,22 +105,22 @@ async function translateDocxFile(inputFile, outputFile, translationMap) {
     fs.writeFileSync(outputFile, outputBuffer);
 
     console.log(`Translation completed: ${inputFile} -> ${outputFile}`);
-}
+};
 
-// 5. Main program
-async function main() {
+// Main program
+const main = async () => {
     try {
-        // Step 1: Load translations from JSON file
+        // Load translations from JSON file
         const translationMap = loadTranslations();
 
-        // Step 2: Translate DOCX file
+        // Translate DOCX file
         await translateDocxFile("input.docx", "output.docx", translationMap);
 
         console.log("Done!");
     } catch (error) {
         console.error("Error:", error.message);
     }
-}
+};
 
 // Run program
 main();
