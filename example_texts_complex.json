@@ -1,0 +1,126 @@
+{
+    "0": {
+        "originalText": "This is a sample document.",
+        "translatedText": "Đây là một tài liệu mẫu."
+    },
+    "1": {
+        "originalText": "Hello world!",
+        "translatedText": "Xin chào thế giới!"
+    },
+    "2": {
+        "originalText": "Company ABC",
+        "translatedText": "Công ty XYZ"
+    },
+    "3": {
+        "originalText": "Thank you!",
+        "translatedText": "Cảm ơn bạn!"
+    },
+    "4": {
+        "originalText": "Current year is 2024",
+        "translatedText": "Năm hiện tại là 2025"
+    },
+    "5": {
+        "originalText": "Confidential — 2024",
+        "translatedText": "Bí mật — 2025"
+    },
+    "6": {
+        "originalText": "Dear {{NAME}}, your order #12345 is confirmed.",
+        "translatedText": "Kính gửi {{TÊN}}, đơn hàng #12345 của bạn đã được xác nhận."
+    },
+    "7": {
+        "originalText": "Open the app",
+        "translatedText": "Mở ứng dụng"
+    },
+    "8": {
+        "originalText": "Sign in",
+        "translatedText": "Đăng nhập"
+    },
+    "9": {
+        "originalText": "Start the trial",
+        "translatedText": "Bắt đầu dùng thử"
+    },
+    "10": {
+        "originalText": "Page footer — Thank you!",
+        "translatedText": "Chân trang — Cảm ơn bạn!"
+    },
+    "11": {
+        "originalText": "This is",
+        "translatedText": "Đây là"
+    },
+    "12": {
+        "originalText": "a sample",
+        "translatedText": "một tài liệu"
+    },
+    "13": {
+        "originalText": "document.",
+        "translatedText": "mẫu."
+    },
+    "14": {
+        "originalText": "Example DOCX (Complex Layout)",
+        "translatedText": "Ví dụ DOCX (Bố cục Phức tạp)"
+    },
+    "15": {
+        "originalText": "Dear",
+        "translatedText": "Kính gửi"
+    },
+    "16": {
+        "originalText": "Quality Assurance",
+        "translatedText": "Đảm bảo Chất lượng"
+    },
+    "17": {
+        "originalText": "Version 1.0",
+        "translatedText": "Phiên bản 1.0"
+    },
+    "18": {
+        "originalText": "Feature",
+        "translatedText": "Tính năng"
+    },
+    "19": {
+        "originalText": "Description",
+        "translatedText": "Mô tả"
+    },
+    "20": {
+        "originalText": "Status",
+        "translatedText": "Trạng thái"
+    },
+    "21": {
+        "originalText": "Multi-language",
+        "translatedText": "Đa ngôn ngữ"
+    },
+    "22": {
+        "originalText": "Supports English and Vietnamese",
+        "translatedText": "Hỗ trợ tiếng Anh và tiếng Việt"
+    },
+    "23": {
+        "originalText": "Enabled",
+        "translatedText": "Đã bật"
+    },
+    "24": {
+        "originalText": "Billing year",
+        "translatedText": "Năm thanh toán"
+    },
+    "25": {
+        "originalText": "Active",
+        "translatedText": "Hoạt động"
+    },
+    "26": {
+        "originalText": "Appendix — Data Table",
+        "translatedText": "Phụ lục — Bảng Dữ liệu"
+    },
+    "27": {
+        "originalText": "Bold Text Example",
+        "translatedText": "Ví dụ Text In Đậm"
+    },
+    "28": {
+        "originalText": "Italic Text Example",
+        "translatedText": "Ví dụ Text In Nghiêng"
+    },
+    "29": {
+        "originalText": "Mixed Formatting Text",
+        "translatedText": "Text Có Định Dạng Hỗn Hợp"
+    },
+    "30": {
+        "originalText": "Important Notice",
+        "translatedText": "Thông Báo Quan Trọng"
+    }
+}
