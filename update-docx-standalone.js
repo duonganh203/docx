@@ -2,35 +2,22 @@ import fs from "fs";
 import path from "path";
 import JSZip from "jszip";
 
-// Load translation mapping from JSON file
 const loadTranslationMapping = () => {
-    try {
-        const jsonPath = path.resolve("example_texts_complex.json");
-        const jsonData = fs.readFileSync(jsonPath, "utf8");
-        const translations = JSON.parse(jsonData);
-
-        // Create mapping from original text to translated text
-        const mapping = new Map();
-        Object.values(translations).forEach(
-            ({ originalText, translatedText }) => {
-                mapping.set(originalText.trim(), translatedText);
-            }
-        );
-
-        return mapping;
-    } catch (error) {
-        console.error("Error loading translation file:", error.message);
-        process.exit(1);
-    }
+    const jsonData = fs.readFileSync("example_texts_complex.json", "utf8");
+    const translations = JSON.parse(jsonData);
+    const mapping = new Map();
+    Object.values(translations).forEach(({ originalText, translatedText }) => {
+        mapping.set(originalText.trim(), translatedText);
+    });
+    return mapping;
 };
 
-const updateXmlTextNodes = (xml, transform) => {
-    return xml.replace(
+const updateXmlTextNodes = (xml, transform) =>
+    xml.replace(
         /<w:t(\s[^>]*)?>([\s\S]*?)<\/w:t>/g,
         (_, attrs, inner) =>
             `<w:t${attrs || ""}>${transform(inner || "")}</w:t>`
     );
-};
 
 const processDocx = async (inputPath, outputPath, transform) => {
     const buf = fs.readFileSync(inputPath);
@@ -70,12 +57,12 @@ const createTransform = (translationMapping) => (text) => {
 
     const trimmedText = text.trim();
 
-    // Check for exact match first
+    // Exact match
     if (translationMapping.has(trimmedText)) {
         return translationMapping.get(trimmedText);
     }
 
-    // Check for partial matches (case insensitive)
+    // Partial match
     for (const [original, translated] of translationMapping.entries()) {
         if (trimmedText.toLowerCase().includes(original.toLowerCase())) {
             return translated;
@@ -86,26 +73,9 @@ const createTransform = (translationMapping) => (text) => {
 };
 
 const main = async () => {
-    const inputPath = path.resolve("input.docx");
-    const outputPath = path.resolve("output.docx");
-
-    if (!fs.existsSync(inputPath)) {
-        console.error(`Error: Input file does not exist: ${inputPath}`);
-        process.exit(1);
-    }
-
-    try {
-        const translationMapping = loadTranslationMapping();
-        const transform = createTransform(translationMapping);
-
-        await processDocx(inputPath, outputPath, transform);
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        process.exit(1);
-    }
+    const translationMapping = loadTranslationMapping();
+    const transform = createTransform(translationMapping);
+    await processDocx("input.docx", "output.docx", transform);
 };
 
-main().catch((err) => {
-    console.error(`Unexpected error: ${err.message}`);
-    process.exit(1);
-});
+main();
